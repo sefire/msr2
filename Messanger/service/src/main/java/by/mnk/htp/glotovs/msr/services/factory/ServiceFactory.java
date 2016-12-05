@@ -1,8 +1,7 @@
 package by.mnk.htp.glotovs.msr.services.factory;
 
-import by.mnk.htp.glotovs.msr.services.impl.BaseService;
+import by.mnk.htp.glotovs.msr.services.impl.*;
 import by.mnk.htp.glotovs.msr.services.interfaces.IService;
-import by.mnk.htp.glotovs.msr.services.impl.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,9 @@ public class ServiceFactory {
     private ServiceFactory() {
         serviceMap = new HashMap<ServiceName, BaseService>();
         serviceMap.put(ServiceName.USER, new UserService());
-        //serviceMap.put(ServiceName.FRIEND, new ProductService());
+        serviceMap.put(ServiceName.FRIEND, new FriendService());
+        serviceMap.put(ServiceName.MESSAGE, new MessageService());
+        serviceMap.put(ServiceName.CHAT, new ChatService());
     }
 
     public static ServiceFactory getInstance() {

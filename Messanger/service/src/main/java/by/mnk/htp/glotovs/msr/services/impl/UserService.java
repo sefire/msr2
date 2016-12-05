@@ -4,11 +4,9 @@ import by.mnk.htp.glotovs.msr.dao.exception.DaoException;
 import by.mnk.htp.glotovs.msr.dao.factory.DaoImplFactory;
 import by.mnk.htp.glotovs.msr.dao.factory.DaoImplName;
 import by.mnk.htp.glotovs.msr.dao.impl.BaseDao;
-import by.mnk.htp.glotovs.msr.dao.impl.UserDaoImpl;
+import by.mnk.htp.glotovs.msr.dao.impl.UserDao;
 import by.mnk.htp.glotovs.msr.entities.UserEntity;
 import by.mnk.htp.glotovs.msr.services.exception.ServiceException;
-import by.mnk.htp.glotovs.msr.services.factory.ServiceFactory;
-import by.mnk.htp.glotovs.msr.services.factory.ServiceName;
 import by.mnk.htp.glotovs.msr.util.HibernateSessionFactory;
 import by.mnk.htp.glotovs.msr.vo.UserPaginationVO;
 import org.hibernate.Session;
@@ -20,21 +18,42 @@ import java.util.List;
  * Created by Sefire on 25.10.2016.
  */
 
-public class UserService extends BaseService<UserEntity> {
-    public UserEntity getUserEntityByPhone(String phone) throws ServiceException {
-        UserEntity userEntity = null;
+public class UserService extends BaseService<UserEntity, Integer> {
+    public UserEntity get(Integer id) throws ServiceException {
+        UserEntity userEntity = new UserEntity();
+        BaseDao<UserEntity, Integer> baseDao = new BaseDao<UserEntity, Integer>(UserEntity.class);
+        try {
+            userEntity = baseDao.get(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return userEntity;
+    }
+
+    public UserEntity load(Integer id) throws ServiceException {
+        UserEntity userEntity = new UserEntity();
         Transaction transaction = null;
-        UserDaoImpl userDao = (UserDaoImpl) DaoImplFactory.getInstance().getDaoImpl(DaoImplName.USER);
+        BaseDao<UserEntity, Integer> baseDao = new BaseDao<UserEntity, Integer>();
         try {
             Session session = HibernateSessionFactory.getSession();
             transaction = session.beginTransaction();
-            userEntity = userDao.getUserEntityByPhone(phone);
+            userEntity = baseDao.load(id);
             transaction.commit();
             HibernateSessionFactory.closeSession();
         } catch (DaoException e) {
-            transaction.rollback();
             HibernateSessionFactory.closeSession();
-            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+        return userEntity;
+    }
+
+    public UserEntity getUserEntityByPhone(String phone) throws ServiceException {
+        UserEntity userEntity = null;
+        UserDao userDao = (UserDao) DaoImplFactory.getInstance().getDaoImpl(DaoImplName.USER);
+        try {
+            userEntity = userDao.getUserEntityByPhone(phone);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
         }
         return userEntity;
     }
@@ -42,6 +61,7 @@ public class UserService extends BaseService<UserEntity> {
     public String checkLoginGetFullName(String phoneFromUser, String passFromUser) throws ServiceException {
         String phoneFromDB = "";
         String passwordFromDB = "";
+
         UserEntity userEntity = getUserEntityByPhone(phoneFromUser);
         if (userEntity != null) {
             phoneFromDB = userEntity.getPhone();
@@ -61,23 +81,23 @@ public class UserService extends BaseService<UserEntity> {
 
         Integer newPage = page != null ? Integer.valueOf(page) : 1;
         List<UserEntity> userEntityList = null;
-        Integer totalUsersCount =0;
+        Integer totalUsersCount = 0;
 
         Transaction transaction = null;
-        UserDaoImpl userDao = (UserDaoImpl) DaoImplFactory.getInstance().getDaoImpl(DaoImplName.USER);
+        UserDao userDao = (UserDao) DaoImplFactory.getInstance().getDaoImpl(DaoImplName.USER);
 
         try {
             Session session = HibernateSessionFactory.getSession();
             transaction = session.beginTransaction();
             totalUsersCount = userDao.totalUsersCount();
-            Integer first = countPerPage*(newPage-1);
-            userEntityList = userDao.getPartUsersPagination(countPerPage,first);
+            Integer first = countPerPage * (newPage - 1);
+            userEntityList = userDao.getPartUsersPagination(countPerPage, first);
             transaction.commit();
             HibernateSessionFactory.closeSession();
         } catch (DaoException e) {
             transaction.rollback();
             HibernateSessionFactory.closeSession();
-            e.printStackTrace();
+            throw new ServiceException(e);
         }
 
         userPaginationVO.setPage(String.valueOf(newPage));
@@ -89,12 +109,12 @@ public class UserService extends BaseService<UserEntity> {
 
     public List getAll() throws ServiceException {
         Transaction transaction = null;
-        UserDaoImpl userDaoImpl = (UserDaoImpl) DaoImplFactory.getInstance().getDaoImpl(DaoImplName.USER);
+        UserDao userDao = (UserDao) DaoImplFactory.getInstance().getDaoImpl(DaoImplName.USER);
         List userEntities = null;
         try {
             Session session = HibernateSessionFactory.getSession();
             transaction = session.beginTransaction();
-            userEntities = userDaoImpl.getAll();
+            userEntities = userDao.getAll();
             transaction.commit();
             HibernateSessionFactory.closeSession();
         } catch (DaoException e) {
@@ -132,4 +152,5 @@ public class UserService extends BaseService<UserEntity> {
     public String changeUserEntityPasswordById(int idUser) {
         return null;
     }
+
 }

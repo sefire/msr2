@@ -1,6 +1,8 @@
 package by.mnk.htp.glotovs.msr.entities;
 
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -184,9 +186,47 @@ public class UserEntity implements IEntity<Integer> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserEntity that = (UserEntity) o;
+
+        return new EqualsBuilder()
+                .append(phone, that.phone)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(age, that.age)
+                .append(country, that.country)
+                .append(city, that.city)
+                .append(password, that.password)
+                .append(type, that.type)
+                .append(access, that.access)
+                .append(deletionStatus, that.deletionStatus)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(phone)
+                .append(firstName)
+                .append(lastName)
+                .append(age)
+                .append(country)
+                .append(city)
+                .append(password)
+                .append(type)
+                .append(access)
+                .append(deletionStatus)
+                .toHashCode();
+    }
+
+    @Override
     public String toString() {
         return //"UserEntity{" +
-                "idUser = " + idUser +
+                "idUser = " + idUser + '\'' +
                 ", phone = " + phone + '\'' +
                 ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' +

@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Created by Sefire on 20.11.2016.
  */
+
 public class UserPaginationVO {
     private Integer totalUsersCount;
     private String page;

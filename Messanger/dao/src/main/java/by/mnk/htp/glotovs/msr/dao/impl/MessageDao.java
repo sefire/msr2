@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Sefire on 25.10.2016.*/
 
 
-public class MessageDaoImpl extends BaseDao<ChatEntity> {
+public class MessageDao extends BaseDao<ChatEntity, Integer> {
 
     public List<MessageEntity> getAllMessagesByChatId(Integer idChat) {
         return null;

@@ -1,7 +1,4 @@
 package by.mnk.htp.glotovs.msr.command;
-/**
- * Created by Sefire on 20.11.2016.
- */
 
 import by.mnk.htp.glotovs.msr.resource.ConfigurationManager;
 import by.mnk.htp.glotovs.msr.services.exception.ServiceException;
@@ -32,15 +29,14 @@ public class GetAllUsersPaginationCommand implements ActionCommand {
         HttpSession session = request.getSession();
 
         //page = String.valueOf(request.getAttribute("page"));
-        //countPerPage =  (String) session.getAttribute("countPerPage"); STILL NOT EXIST ON JSP!!!
-
+        countPerPage = (String) request.getParameter("countPerPage");
         if (countPerPage == null)
-            countPerPage = "5";
-/*        if (page == "null")
-            page = "1";*/
+            countPerPage = (String) session.getAttribute("countPerPage");
+
+            if (countPerPage == null)
+                countPerPage = "4";
         if (page == null)
             page = "1";
-
 
 
         try {
@@ -54,6 +50,8 @@ public class GetAllUsersPaginationCommand implements ActionCommand {
         request.setAttribute("alluserslist", userPaginationVO.getUserEntityList());
 
         session.setAttribute("page", userPaginationVO.getPage());
+
+        session.setAttribute("countPerPage", countPerPage);
 
         page = ConfigurationManager.getProperty("path.page.allUsersPagination");
         return page;

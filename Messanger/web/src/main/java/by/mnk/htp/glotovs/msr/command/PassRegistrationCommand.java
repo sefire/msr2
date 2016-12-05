@@ -5,6 +5,7 @@ import by.mnk.htp.glotovs.msr.resource.ConfigurationManager;
 import by.mnk.htp.glotovs.msr.services.exception.ServiceException;
 import by.mnk.htp.glotovs.msr.services.factory.ServiceFactory;
 import by.mnk.htp.glotovs.msr.services.factory.ServiceName;
+import by.mnk.htp.glotovs.msr.services.impl.UserService;
 import by.mnk.htp.glotovs.msr.services.interfaces.IService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class PassRegistrationCommand implements ActionCommand  {
         userEntity.setAge((Integer.valueOf(request.getParameter("age"))));
         userEntity.setPassword((String)request.getParameter("password"));
 
-        IService userService =  ServiceFactory.getInstance().getService(ServiceName.USER);
+        UserService userService = (UserService) ServiceFactory.getInstance().getService(ServiceName.USER);
         try {
             userService.saveOrUpdate(userEntity);
             HttpSession session = request.getSession();

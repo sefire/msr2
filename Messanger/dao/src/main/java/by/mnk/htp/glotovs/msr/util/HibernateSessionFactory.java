@@ -1,11 +1,11 @@
 package by.mnk.htp.glotovs.msr.util;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.HibernateException;
 
 /**
  * Created by Sefire on 20.11.2016.
@@ -37,7 +37,7 @@ public class HibernateSessionFactory {
     public static Session getSession() throws HibernateException {
         Session session = (Session) threadLocal.get();
         if (session == null || !session.isOpen()) {
-            if (sessionFactory == null) {
+            if (sessionFactory == null ) {
                 rebuildSessionFactory();
             }
             session = (sessionFactory != null) ? sessionFactory.openSession() : null;
@@ -66,6 +66,7 @@ public class HibernateSessionFactory {
             session.close();
         }
     }
+
 
     public static org.hibernate.SessionFactory getSessionFactory() {
         return sessionFactory;

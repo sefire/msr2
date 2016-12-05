@@ -12,8 +12,8 @@ import java.util.List;
  * Created by Sefire on 24.10.2016.
  */
 
-public class UserDaoImpl extends BaseDao<UserEntity> {
-    private static Logger log = Logger.getLogger(UserDaoImpl.class);
+public class UserDao extends BaseDao<UserEntity, Integer> {
+    private static Logger log = Logger.getLogger(UserDao.class);
 
     public UserEntity getUserEntityByPhone(String phone) throws DaoException {
         UserEntity userEntity = null;
@@ -118,6 +118,6 @@ public class UserDaoImpl extends BaseDao<UserEntity> {
     }
 
     private Class getPersistentClass() {
-        return (Class<UserDaoImpl>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return (Class<UserDao>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 }

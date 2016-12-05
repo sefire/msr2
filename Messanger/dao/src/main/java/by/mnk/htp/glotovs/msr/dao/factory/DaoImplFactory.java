@@ -17,10 +17,10 @@ public class DaoImplFactory {
 
     private DaoImplFactory() {
         daoImplMap = new HashMap<DaoImplName, IDao>();
-        daoImplMap.put(DaoImplName.USER, new UserDaoImpl());
-        daoImplMap.put(DaoImplName.FRIEND, new FriendDaoImpl());
-        daoImplMap.put(DaoImplName.CHAT, new ChatDaoImpl());
-        daoImplMap.put(DaoImplName.MESSAGE, new MessageDaoImpl());
+        daoImplMap.put(DaoImplName.USER, new UserDao());
+        daoImplMap.put(DaoImplName.FRIEND, new FriendDao());
+        daoImplMap.put(DaoImplName.CHAT, new ChatDao());
+        daoImplMap.put(DaoImplName.MESSAGE, new MessageDao());
     }
 
     public static DaoImplFactory getInstance() {

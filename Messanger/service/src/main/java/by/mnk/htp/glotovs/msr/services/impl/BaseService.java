@@ -14,33 +14,29 @@ import java.io.Serializable;
 /**
  * Created by Sefire on 20.11.2016.
  */
-//тут реализация
-public class BaseService<T> implements IService<T> {
+public abstract class BaseService<T extends IEntity, PK extends Serializable> implements IService<T, PK> {
 
-    public void saveOrUpdate(T t) throws ServiceException {
-        BaseDao<T> baseDao =  new BaseDao<T>();
-        Transaction transaction = null;
+    public abstract T get(PK id) throws ServiceException;
+
+    public abstract T load(PK id) throws ServiceException;
+
+    public boolean saveOrUpdate(T t) throws ServiceException {
+        BaseDao<T, PK> baseDao = new BaseDao<T, PK>();
         try {
-            Session session = HibernateSessionFactory.getSession();
-            transaction = session.beginTransaction();
             baseDao.saveOrUpdate(t);
-            transaction.commit();
-            HibernateSessionFactory.closeSession();
+            return true;
         } catch (DaoException e) {
-            transaction.rollback();
-            HibernateSessionFactory.closeSession();
+            throw new ServiceException(e);
         }
     }
 
-    public T get(Serializable id) throws ServiceException {
-        return null;
-    }
-
-    public T load(Serializable id) throws ServiceException {
-        return null;
-    }
-
-    public void delete(T t) throws ServiceException {
-
+    public boolean delete(T t) throws ServiceException {
+        BaseDao<T, PK> baseDao = new BaseDao<T, PK>();
+        try {
+            baseDao.delete(t);
+            return true;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

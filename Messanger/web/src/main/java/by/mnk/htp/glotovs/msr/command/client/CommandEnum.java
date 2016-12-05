@@ -12,8 +12,14 @@ public enum CommandEnum {
     GETUSERINFO(new GetUserInfoCommand()),
     GETALLUSERS(new GetAllUsersCommand()),
     GETALLUSERSPAGINATION(new GetAllUsersPaginationCommand()),
-    GETALLUSERSPAGINATIONNEXT(new GetAllUsersPaginationNextCommand()),
-    GETALLUSERSPAGINATIONPREV(new GetAllUsersPaginationPrevCommand()),
+    MAIN(new MainCommand()),
+    GETMYCHATS(new GetMyChats()),
+    GETMYFRIENDS(new GetMyFriends()),
+    SEARCHUSER(new SearchUserPage()),
+    FINDUSERBYPHONE(new FindUserByPhone()),
+    ADDTOFRIENDS(new AddFriend()),
+    DELETEFROMFRIENDS(new DeleteFriend()),
+    CHANGEUSERFIELD(new ChangeUserField()),
     LOGOUT(new LogoutCommand());
 
     ActionCommand command;

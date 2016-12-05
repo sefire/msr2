@@ -8,6 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,13 +28,26 @@ public class ChatEntity implements IEntity<Integer> {
     private int idChat;
 
     @Column(name = "lastTimeMessage")
-    private GregorianCalendar lastTimeMessage;
+    private Date lastTimeMessage;
 
     @ManyToMany(mappedBy = "chatEntities")
     private Set<UserEntity> userEntities = new HashSet<UserEntity>();
 
     @OneToMany(mappedBy = "chatEntity")
     private Set<MessageEntity> messageEntities;
+
+
+
+    @Transient
+    private String lastTimeMessageString;
+
+    public String getLastTimeMessageString() {
+        return lastTimeMessageString;
+    }
+
+    public void setLastTimeMessageString(String lastTimeMessageString) {
+        this.lastTimeMessageString = lastTimeMessageString;
+    }
 
     public Set<UserEntity> getUserEntities() {
         return userEntities;
@@ -63,11 +78,11 @@ public class ChatEntity implements IEntity<Integer> {
 
     }
 
-    public GregorianCalendar getLastTimeMessage() {
+    public Date getLastTimeMessage() {
         return lastTimeMessage;
     }
 
-    public void setLastTimeMessage(GregorianCalendar lastTimeMessage) {
+    public void setLastTimeMessage(Date lastTimeMessage) {
         this.lastTimeMessage = lastTimeMessage;
     }
 

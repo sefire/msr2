@@ -7,6 +7,7 @@ import by.mnk.htp.glotovs.msr.services.factory.ServiceFactory;
 import by.mnk.htp.glotovs.msr.services.factory.ServiceName;
 import by.mnk.htp.glotovs.msr.services.impl.UserService;
 import by.mnk.htp.glotovs.msr.services.interfaces.IService;
+import by.mnk.htp.glotovs.msr.util.HibernateSessionFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,9 +23,15 @@ public class GetUserInfoCommand implements ActionCommand {
         UserService userService =(UserService)  ServiceFactory.getInstance().getService(ServiceName.USER);
         UserEntity userEntity = null;
 
+
         try {
+            HibernateSessionFactory.getSession().beginTransaction();
             userEntity = userService.getUserEntityByPhone(phoneFromSession);
+            HibernateSessionFactory.getSession().getTransaction().commit();
+            HibernateSessionFactory.closeSession();
         } catch (ServiceException e) {
+            HibernateSessionFactory.getSession().getTransaction().rollback();
+            HibernateSessionFactory.closeSession();
             e.printStackTrace();
         }
 
