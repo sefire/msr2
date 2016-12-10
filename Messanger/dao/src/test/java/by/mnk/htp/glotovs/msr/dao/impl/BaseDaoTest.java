@@ -1,12 +1,15 @@
+/*
 package by.mnk.htp.glotovs.msr.dao.impl;
 
 import by.mnk.htp.glotovs.msr.dao.exception.DaoException;
 import by.mnk.htp.glotovs.msr.entities.UserEntity;
 import junit.framework.TestCase;
 
+*/
 /**
  * Created by Sergey Glotov on 22.11.2016.
- */
+ *//*
+
 
 public class BaseDaoTest extends TestCase {
 
@@ -73,4 +76,4 @@ public class BaseDaoTest extends TestCase {
 
     }
 
-}
+}*/

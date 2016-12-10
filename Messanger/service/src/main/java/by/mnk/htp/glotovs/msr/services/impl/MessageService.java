@@ -1,27 +1,36 @@
 package by.mnk.htp.glotovs.msr.services.impl;
 
 import by.mnk.htp.glotovs.msr.dao.exception.DaoException;
-import by.mnk.htp.glotovs.msr.dao.impl.BaseDao;
+import by.mnk.htp.glotovs.msr.dao.interfaces.IBaseDao;
+import by.mnk.htp.glotovs.msr.dao.interfaces.IMessageDao;
 import by.mnk.htp.glotovs.msr.entities.MessageEntity;
-import by.mnk.htp.glotovs.msr.entities.UserEntity;
 import by.mnk.htp.glotovs.msr.services.exception.ServiceException;
-import by.mnk.htp.glotovs.msr.util.HibernateSessionFactory;
+import by.mnk.htp.glotovs.msr.services.interfaces.IMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
+import java.util.List;
 
 
 /**
  * Created by Sefire on 22.11.2016.
  */
-public class MessageService extends BaseService<MessageEntity, Integer>  {
+
+@Service
+@Transactional(propagation = Propagation.REQUIRED)
+public class MessageService extends BaseService<MessageEntity, Integer> implements IMessageService<MessageEntity, Integer> {
+
+    @Autowired
+    IMessageDao messageDao;
 
     public MessageEntity get(Integer id) throws ServiceException {
         MessageEntity messageEntity = new MessageEntity();
-        BaseDao<MessageEntity, Integer> baseDao = new BaseDao<MessageEntity, Integer>();
+
         try {
-            messageEntity = baseDao.get(id);
+            messageEntity = (MessageEntity) messageDao.get(id);
         } catch (DaoException e) {
-            HibernateSessionFactory.closeSession();
             throw new ServiceException(e);
         }
         return messageEntity;
@@ -29,13 +38,15 @@ public class MessageService extends BaseService<MessageEntity, Integer>  {
 
     public MessageEntity load(Integer id) throws ServiceException {
         MessageEntity messageEntity = new MessageEntity();
-        BaseDao<MessageEntity, Integer> baseDao = new BaseDao<MessageEntity, Integer>();
         try {
-            messageEntity = baseDao.load(id);
+            messageEntity = (MessageEntity) messageDao.load(id);
         } catch (DaoException e) {
-            HibernateSessionFactory.closeSession();
             throw new ServiceException(e);
         }
         return messageEntity;
+    }
+
+    public List<MessageEntity> getAllMessagesByChatId(Integer idChat) {
+        return null;
     }
 }

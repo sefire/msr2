@@ -3,28 +3,36 @@ package by.mnk.htp.glotovs.msr.services.impl;
 import by.mnk.htp.glotovs.msr.dao.exception.DaoException;
 import by.mnk.htp.glotovs.msr.dao.impl.BaseDao;
 import by.mnk.htp.glotovs.msr.dao.impl.FriendDao;
+import by.mnk.htp.glotovs.msr.dao.interfaces.IBaseDao;
+import by.mnk.htp.glotovs.msr.dao.interfaces.IFriendDao;
 import by.mnk.htp.glotovs.msr.entities.FriendEntity;
 import by.mnk.htp.glotovs.msr.entities.UserEntity;
 import by.mnk.htp.glotovs.msr.services.exception.ServiceException;
-import by.mnk.htp.glotovs.msr.util.HibernateSessionFactory;
+import by.mnk.htp.glotovs.msr.services.interfaces.IFriendService;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * Created by Sefire on 22.11.2016.
  */
-public class FriendService extends BaseService<FriendEntity, Integer> {
+@Service
+@Transactional(propagation = Propagation.REQUIRED)
+public class FriendService extends BaseService<FriendEntity, Integer> implements IFriendService<FriendEntity, Integer> {
+
+    @Autowired
+    IFriendDao friendDao;
 
     public List<UserEntity> getAllFriendsByUserId(Integer id) throws ServiceException {
-        FriendDao friendDao = new FriendDao();
         List<UserEntity> userFriendsList = null;
-        BaseDao<FriendEntity, Integer> baseDao = new BaseDao<FriendEntity, Integer>();
         try {
             userFriendsList = friendDao.getAllFriendsByUserId(id);
         } catch (DaoException e) {
-            HibernateSessionFactory.closeSession();
             throw new ServiceException(e);
         }
         return userFriendsList;
@@ -32,18 +40,10 @@ public class FriendService extends BaseService<FriendEntity, Integer> {
 
     public boolean DeleteFriendEntity(Integer idUser, Integer userFriendId) throws ServiceException {
         boolean isDeleted = false;
-        FriendDao friendDao = new FriendDao();
 
-        Transaction transaction = null;
         try {
-            Session session = HibernateSessionFactory.getSession();
-            transaction = session.beginTransaction();
             isDeleted = friendDao.deleteFriendEntity(idUser, userFriendId);
-            transaction.commit();
-            HibernateSessionFactory.closeSession();
         } catch (DaoException e) {
-            transaction.rollback();
-            HibernateSessionFactory.closeSession();
             throw new ServiceException(e);
         }
         return isDeleted;
@@ -51,11 +51,10 @@ public class FriendService extends BaseService<FriendEntity, Integer> {
 
     public FriendEntity get(Integer id) throws ServiceException {
         FriendEntity friendEntity = new FriendEntity();
-        BaseDao<FriendEntity, Integer> baseDao = new BaseDao<FriendEntity, Integer>();
+
         try {
-            friendEntity = baseDao.get(id);
+            friendEntity = (FriendEntity) friendDao.get(id);
         } catch (DaoException e) {
-            HibernateSessionFactory.closeSession();
             throw new ServiceException(e);
         }
         return friendEntity;
@@ -63,11 +62,9 @@ public class FriendService extends BaseService<FriendEntity, Integer> {
 
     public FriendEntity load(Integer id) throws ServiceException {
         FriendEntity friendEntity = new FriendEntity();
-        BaseDao<FriendEntity, Integer> baseDao = new BaseDao<FriendEntity, Integer>();
         try {
-            friendEntity = baseDao.load(id);
+            friendEntity = (FriendEntity) friendDao.load(id);
         } catch (DaoException e) {
-            HibernateSessionFactory.closeSession();
             throw new ServiceException(e);
         }
         return friendEntity;

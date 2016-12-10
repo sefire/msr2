@@ -1,31 +1,33 @@
 package by.mnk.htp.glotovs.msr.dao.impl;
 
 import by.mnk.htp.glotovs.msr.dao.exception.DaoException;
+import by.mnk.htp.glotovs.msr.dao.interfaces.IChatDao;
 import by.mnk.htp.glotovs.msr.entities.ChatEntity;
-import by.mnk.htp.glotovs.msr.entities.UserEntity;
-import by.mnk.htp.glotovs.msr.util.HibernateSessionFactory;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /*
  * Created by Sefire on 25.10.2016.*/
+@Repository
+public class ChatDao extends BaseDao<ChatEntity, Integer> implements IChatDao<ChatEntity, Integer> {
+    private static Logger log = Logger.getLogger(ChatDao.class);
 
-public class ChatDao extends BaseDao<ChatEntity, Integer> {
-    private static Logger log = Logger.getLogger(FriendDao.class);
 
     public List<ChatEntity> getUserChatsByUserId(Integer idUser) throws DaoException {
         List<ChatEntity> chatEntityList = null;
 
         log.info("Get chats by id:" + idUser);
         try {
-            Session session = HibernateSessionFactory.getSession();
 
-            Query query = session.createQuery("SELECT C FROM ChatEntity as C join C.userEntities U" +
+            Query query = getSession().createQuery("SELECT C FROM ChatEntity as C join C.userEntities U" +
                     " where U.idUser =:idUser order by C.lastTimeMessage desc ");
             query.setParameter("idUser", idUser);
             query.setCacheable(true);
@@ -36,14 +38,6 @@ public class ChatDao extends BaseDao<ChatEntity, Integer> {
             throw new DaoException(e);
         }
         return chatEntityList;
-    }
-
-    public List<Integer> getAllChatIdsByUserId(Integer idUser) {
-        return null;
-    }
-
-    public List getAll() {
-        return null;
     }
 
     private Class getPersistentClass() {

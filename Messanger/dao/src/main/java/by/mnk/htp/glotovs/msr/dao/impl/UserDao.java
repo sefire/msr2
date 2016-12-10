@@ -1,18 +1,21 @@
 package by.mnk.htp.glotovs.msr.dao.impl;
 
 import by.mnk.htp.glotovs.msr.dao.exception.DaoException;
+import by.mnk.htp.glotovs.msr.dao.interfaces.IUserDao;
 import by.mnk.htp.glotovs.msr.entities.UserEntity;
-import by.mnk.htp.glotovs.msr.util.HibernateSessionFactory;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
  * Created by Sefire on 24.10.2016.
  */
-
-public class UserDao extends BaseDao<UserEntity, Integer> {
+@Repository
+public class UserDao extends BaseDao<UserEntity, Integer> implements IUserDao<UserEntity, Integer> {
     private static Logger log = Logger.getLogger(UserDao.class);
 
     public UserEntity getUserEntityByPhone(String phone) throws DaoException {
@@ -21,8 +24,7 @@ public class UserDao extends BaseDao<UserEntity, Integer> {
         log.info("Get class by phone:" + phone);
         try {
 
-            Session session = HibernateSessionFactory.getSession();
-            Query query = session.createQuery("SELECT U FROM UserEntity as U where U.phone = :phone");
+            Query query = getSession().createQuery("SELECT U FROM UserEntity as U where U.phone = :phone");
             query.setParameter("phone",phone);
             query.setCacheable(true);
             userEntity = (UserEntity) query.uniqueResult();
@@ -40,8 +42,7 @@ public class UserDao extends BaseDao<UserEntity, Integer> {
         log.info("Get all users");
 
         try {
-            Session session = HibernateSessionFactory.getSession();
-            Query query = session.createQuery("FROM UserEntity ");
+            Query query = getSession().createQuery("FROM UserEntity ");
             query.setCacheable(true);
             userEntityList = query.list();
             log.info("got all users!");
@@ -58,9 +59,8 @@ public class UserDao extends BaseDao<UserEntity, Integer> {
         log.info("Get totalUsersCount");
 
         try {
-            Session session = HibernateSessionFactory.getSession();
 
-            Query query = session.createQuery("select count(user) from UserEntity user");
+            Query query = getSession().createQuery("select count(user) from UserEntity user");
             query.setCacheable(true);
             Long totalUsers = (Long) query.uniqueResult();
              totalUsersCount = totalUsers != null ? totalUsers.intValue() : null;
@@ -75,9 +75,8 @@ public class UserDao extends BaseDao<UserEntity, Integer> {
     public List<UserEntity> getPartUsersPagination (Integer count, Integer startPosition) throws DaoException{
         List<UserEntity>  userEntityList = null;
         try {
-            Session session = HibernateSessionFactory.getSession();
             String hql = "from UserEntity ";
-            Query query = session.createQuery(hql);
+            Query query = getSession().createQuery(hql);
             query.setFirstResult(startPosition);
             query.setMaxResults(count);
             query.setCacheable(true);
@@ -87,34 +86,6 @@ public class UserDao extends BaseDao<UserEntity, Integer> {
             throw new DaoException(e);
         }
         return userEntityList;
-    }
-
-    public List<UserEntity> getUserEntitiesByFNandLN(String firstName, String lastName) {
-        return null;
-    }
-
-    public String getUserEntityPasswordByPhone(String phone) {
-        return null;
-    }
-
-    public int getUserIdByPhone(String phone) {
-        return 0;
-    }
-
-    public String changeUserEntityCountryById(Integer idUser) {
-        return null;
-    }
-
-    public String changeUserEntityCityById(Integer idUser) {
-        return null;
-    }
-
-    public int changeUserEntityAgeById(Integer idUser) {
-        return 0;
-    }
-
-    public String changeUserEntityPasswordById(Integer idUser) {
-        return null;
     }
 
     private Class getPersistentClass() {

@@ -1,13 +1,16 @@
 package by.mnk.htp.glotovs.msr.dao.impl;
 
 import by.mnk.htp.glotovs.msr.dao.exception.DaoException;
+import by.mnk.htp.glotovs.msr.dao.interfaces.IFriendDao;
 import by.mnk.htp.glotovs.msr.entities.FriendEntity;
 import by.mnk.htp.glotovs.msr.entities.UserEntity;
-import by.mnk.htp.glotovs.msr.util.HibernateSessionFactory;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -15,8 +18,8 @@ import java.util.List;
 /**
  * Created by Sefire on 25.10.2016.*/
 
-
-public class FriendDao extends BaseDao<FriendEntity, Integer> {
+@Repository
+public class FriendDao extends BaseDao<FriendEntity, Integer> implements IFriendDao<FriendEntity, Integer> {
     private static Logger log = Logger.getLogger(FriendDao.class);
 
     public List<UserEntity> getAllFriendsByUserId(Integer idUser) throws DaoException {
@@ -24,8 +27,7 @@ public class FriendDao extends BaseDao<FriendEntity, Integer> {
 
         log.info("Get friends by id:" + idUser);
         try {
-            Session session = HibernateSessionFactory.getSession();
-            Query query = session.createQuery("SELECT U FROM UserEntity as U where U.idUser in " +
+            Query query = getSession().createQuery("SELECT U FROM UserEntity as U where U.idUser in " +
                     "(select F.userFriendId from FriendEntity AS F where F.userEntity.idUser =:idUser)");
             query.setParameter("idUser", idUser);
             query.setCacheable(true);
@@ -43,8 +45,7 @@ public class FriendDao extends BaseDao<FriendEntity, Integer> {
 
         log.info("Delete friend with idUser, userFriendId: " + idUser + ", " + userFriendId);
         try {
-            Session session = HibernateSessionFactory.getSession();
-            Query query = session.createQuery("delete from FriendEntity as F  where F.userEntity.idUser =:idUser  and  " +
+            Query query = getSession().createQuery("delete from FriendEntity as F  where F.userEntity.idUser =:idUser  and  " +
                     "F.userFriendId =:userFriendId" );
             query.setParameter("idUser", idUser);
             query.setParameter("userFriendId", userFriendId);
