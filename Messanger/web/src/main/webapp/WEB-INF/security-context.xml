@@ -18,7 +18,7 @@
                     always-use-default-target="true"
                     default-target-url="/main"
                     authentication-failure-url="/login?error=true"/>
-        <logout logout-success-url="/login"></logout>
+<!--        <logout logout-success-url="/login"></logout>-->
 
         <csrf disabled="true"/>
     </http>

@@ -11,9 +11,6 @@
 <body>
 
 
-<a href="/msr2/?locale=ru" style="padding: 5px">RU</a>
-<a href="/msr2/?locale=en" style="padding: 5px">EN</a>
-
 <tiles:insertAttribute name="header"/>
 <tiles:insertAttribute name="body"/>
 </body>

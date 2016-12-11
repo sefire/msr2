@@ -30,10 +30,10 @@ public class ChatEntity implements IEntity<Integer> {
     @Column(name = "lastTimeMessage")
     private Date lastTimeMessage;
 
-    @ManyToMany(mappedBy = "chatEntities")
+    @ManyToMany(mappedBy = "chatEntities", fetch = FetchType.EAGER)
     private Set<UserEntity> userEntities = new HashSet<UserEntity>();
 
-    @OneToMany(mappedBy = "chatEntity")
+    @OneToMany(mappedBy = "chatEntity", fetch = FetchType.EAGER)
     private Set<MessageEntity> messageEntities;
 
 

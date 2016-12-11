@@ -1,45 +1,30 @@
-/*
- * Copyright (C) 2014 GHX, Inc.
- *  Louisville, Colorado, USA.
- *  All rights reserved.
- *
- *  Warning: Unauthorized reproduction or distribution of this program, or
- *  any portion of it, may result in severe civil and criminal penalties,
- *  and will be prosecuted to the maximum extent possible under the law.
- *
- *  Created on 023 23.05.2014
- */
 package by.mnk.htp.glotovs.msr.controller;
 
 import by.mnk.htp.glotovs.msr.entities.UserEntity;
-import by.mnk.htp.glotovs.msr.services.exception.ServiceException;
-import by.mnk.htp.glotovs.msr.services.impl.UserService;
 import by.mnk.htp.glotovs.msr.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
-
 public class LoginController {
 
     @Autowired
     private IUserService userService;
 
     @RequestMapping(value = {"/"}, method = RequestMethod.GET )
-    public String zeroPage() {
+    public String zeroPage(HttpSession httpSession ) {
+        //httpSession.setAttribute("currentUserPhoneNumber", new String());
         return "login";
     }
 
@@ -51,8 +36,21 @@ public class LoginController {
         modelAndView.setViewName("login");
         return modelAndView;
     }
+    private String getPrincipal() {
+        String phoneNumber;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    //--------------------------------------------------------------
+        if (principal instanceof UserDetails) {
+            phoneNumber = ((UserDetails) principal).getUsername();
+        } else {
+            phoneNumber = principal.toString();
+        }
+        return phoneNumber;
+    }
+
+
+
+/*
 
     @RequestMapping(value = { "/home" }, method = RequestMethod.GET)
     public String homePage(ModelMap model) {
@@ -91,6 +89,7 @@ public class LoginController {
         }
         return userName;
     }
+*/
 
     //@ModelAttribute("station") Station station,
 /*    @RequestMapping(value = "/", method = RequestMethod.GET )

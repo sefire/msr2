@@ -10,41 +10,10 @@
 
 <body>
 
-<!--<div id="mainWrapper">
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-form">
-                <c:url var="loginUrl" value="/login" />
-                <form action="${loginUrl}" method="post" class="form-horizontal">
-                    <c:if test="${param.error != null}">
-                        <div class="alert alert-danger">
-                            <p><spring:message code="page.login.error"/></p>
-                        </div>
-                    </c:if>
-                    <div class="input-group input-sm">
-                        <label class="input-group-addon" for="username"><i class="fa fa-user"></i></label>
-                        <input type="text" class="form-control" id="username" name="phoneNumber" placeholder="Enter phoneNumber" required="required"><jsp:text/></input>
-                    </div>
-
-                    <div class="input-group input-sm">
-                        <label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required="required"><jsp:text/></input>
-                    </div>
-                    &lt;!&ndash;                    <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}"><jsp:text/></input>&ndash;&gt;
-
-                    <div class="form-actions">
-                        <input type="submit"
-                               class="btn btn-block btn-primary btn-default" value="Log in"/>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>-->
-
 <div class="container">
     <br/><br/><br/><br/>
     <div class="container">
+
 
         <div class="row" style="margin-top:20px">
             <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
@@ -55,10 +24,17 @@
                             <p><spring:message code="page.login.error"/></p>
                         </div>
                     </c:if>
+                    <c:if test="${param.logout != null}">
+                        <div class="alert alert-success">
+                            <p>You have been logged out successfully.</p>
+                        </div>
+                    </c:if>
 <!--                    <input type="hidden" name="command" value="login"/>-->
                     <fieldset>
 
                         <h2><spring:message code="page.login.signIn"/></h2>
+                        <a href="/msr2/?locale=ru" style="padding: 7px;">RU</a>
+                        <a href="/msr2/?locale=en" style="padding: 7px;">EN</a>
                         <hr class="colorgraph"/>
                         <div class="form-group">
                             <spring:message code="page.login.placeholderPhone" var="placeholderPhone"/>
